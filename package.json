@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "mkdir -p dist && vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
-    "start": "node dist/server.cjs",
+    "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
+    "start": "node -e \"const fs = require('fs'); if (!fs.existsSync('dist/server.cjs')) { console.log('--- STARTUP: dist/server.cjs not found! Triggering auto-build... ---'); const cmd = fs.existsSync('bun.lock') || fs.existsSync('bun.lockb') ? 'bun run build' : 'npm run build'; try { require('child_process').execSync(cmd, { stdio: 'inherit' }); } catch (e) { console.error('Auto-build failed!', e); process.exit(1); } }\" && node dist/server.cjs",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit"
   },
